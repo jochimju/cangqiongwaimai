@@ -112,4 +112,27 @@ public class EmployeeServiceImpl implements EmployeeService {
         return new PageResult(total, records); //封装到一个pageresult对象中并返回，这里调用的是有参构造器
     }
 
+    /**
+     * 启用禁用员工账号
+     *
+     * @param status
+     * @param id
+     */
+    public void startOrStop(Integer status, Long id) {
+        //最终我们希望执行的sql语句是 update employee set status = ? where id = ?
+        //需要在Employee类上面加一个@Builder注解才能用这个方法
+        Employee employee = Employee.builder()
+                .status(status)
+                .id(id)
+                .build();
+        //传统写法：
+        //Employee employee = new Employee();
+        //employee.setStatus(status);
+        //employee.setId(id);
+
+
+        //为了提高修改的通用性，我们把update方法写成动态的，即我们不止根据id修改status，还可以根据传进来的参数的不同修改多个字段。
+        employeeMapper.update(employee);
+    }
+
 }
